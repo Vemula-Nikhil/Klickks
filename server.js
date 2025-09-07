@@ -8,12 +8,24 @@ const jwt = require('jsonwebtoken')
 const path = require('path')
 const app = express()
 
-app.use(cors());
-app.use(express.json())
+const allowedOrigins = [
+  "http://localhost:3000",                  // local dev
+  "https://klickks-frontend.onrender.com"   // replace with your actual frontend Render URL
+]
+
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
-}));
+  credentials: true
+}))
+
+app.use(express.json())
 
 const dbPath = path.join(__dirname, 'klickks.db')
 
