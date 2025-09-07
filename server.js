@@ -89,8 +89,9 @@ app.post('/signin', async (req, res) => {
     const dbUser = await db.get(`SELECT * FROM users WHERE username= ?`,
     [username])
 
+
     if(!dbUser){
-        res.status(200).json({error: "Invalid User"})
+        res.status(400).json({error: "Invalid User"})
     }else{
         const isPasswordMatch = await bcrypt.compare(password, dbUser.password)
         if(isPasswordMatch){
