@@ -41,12 +41,15 @@ initiliseDbAndServer()
 
 
 app.post('/signup', async (req, res) => {
-    const {username, password} = req.body;
-    if(!username || username.length < 6){
+    const {username, password, confirmPassword} = req.body;
+    if(!username || username.length < 5){
         return res.status(400).json({error: 'Enter username (min length: 5)'})
     }
-    if(!password || password.length < 9){
+    if(!password || password.length < 8){
         return res.status(400).json({error: 'Enter password (min length: 8)'})
+    }
+    if(confirmPassword !== password){
+        return res.status(400).json({error: 'passwords mismatch'})
     }
 
     const existing = await db.get(
